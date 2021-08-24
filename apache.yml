@@ -1,0 +1,8 @@
+---
+# this playbook use sample-apache role in roles diretory
+- hosts: webservers
+  become: yes
+  roles: 
+    - sample-apache
+     
+--- 

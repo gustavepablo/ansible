@@ -1,0 +1,38 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+  - name: Setup banner
+    lineinfile:
+      line: "banner /etc/motd"
+      path: /etc/ssh/sshd_config
+      insertafter: '#  Banner none'
+      state: present
+    notify: restart sshd
+
+  - name: set x11for....
+    lineinfile:
+      line: "MaxAuthTries 3"
+      regexp: '#MaxAuthTries 6'
+      path: /etc/ssh/sshd_config
+      state: present
+    notify: restart sshd
+
+
+  - name: set MaxAuth
+    lineinfile:
+      line: "banner /etc/motd"
+      path: /etc/ssh/sshd_config
+    notify: restart sshd
+
+  handlers:
+  - name: restart sshd
+    service:
+      name: sshd
+      state: restarted
+      enabled: yes
+
+
+
+

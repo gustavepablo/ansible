@@ -1,0 +1,26 @@
+---
+- hosts: proxy
+  become: yes
+  tasks:
+  - name: create reposotory
+    yum_repository:
+      name: MariaDB-10.5
+      description: 'MariaDB 10.5 YUM Repo'
+      file: mariaDb
+      baseurl: http://mirror.centos.org/centos/7/centosplus/x86_64
+      gpgcheck: yes
+      enabled: yes
+
+    notify: yum-clean-metadata
+
+  - name: inserte line in mariadb file
+    lineinfile:
+      line: 'hostfixes=1'
+      path: /etc/yum.repos.d/mariaDb.repo
+ 
+  handlers:
+  - name: yum-clean-metadata
+    command: yum clean metadata
+    args:
+      warn: no
+ 

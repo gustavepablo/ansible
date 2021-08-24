@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: yes
+  vars_files:
+    - user_list.yml
+    - secret.yml
+  tasks:
+  - name: Create user in proxy
+    user: 
+      name: "{{item.username}}"
+      password: "{{user_password | password_hash('sha512')}}"
+      group: wheel
+      append: yes
+    loop: "{{users}}"
+    when:
+      - item.uid > 1000 and item.uid <= 1999
+      - inventory_hostname in groups['proxy']
+ 
+  - name:  Send key
+    authorized_key:
+      user: "{{item.username}}"
+      state: present
+      key: "{{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}"
+    loop: "{{users}}"
+    when:
+      - item.uid > 1000 and item.uid <= 1999
+      - inventory_hostname in groups['proxy']
+
+  - name: Create user in databse
+    user:
+      name: "{{item.username}}"
+      password: "{{user_password | password_hash('sha512')}}"
+      group: wheel
+      append: yes
+    loop: "{{users}}"
+    when:
+      - item.uid > 2000 and item.uid <= 2999
+      - inventory_hostname in groups['database']
+
+  - name:  Send key to dabase users
+    authorized_key:
+      user: "{{item.username}}"
+      state: present
+      key: "{{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}"
+    loop: "{{users}}"
+    when:
+      - item.uid > 2000 and item.uid <= 2999
+      - inventory_hostname in groups['database']
+

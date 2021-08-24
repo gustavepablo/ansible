@@ -1,0 +1,24 @@
+---
+# this play boot use geerlingguy.haproxy role in roles dir
+# node1 and node1 are the webservers
+# firewall port 80 will open for tcp
+
+- hosts: proxy
+  become: yes
+  vars: 
+    haproxy_backend_servers:
+      - name: node1
+        address: 192.168.0.52:80
+      - name: node2
+        address: 192.168.0.21:80
+  roles:
+    - geerlingguy.haproxy
+
+
+  tasks:
+  - name: Open firewall port 80
+    firewalld:
+      port: 80/tcp
+      permanent: yes
+      state: enabled
+      immediate: yes

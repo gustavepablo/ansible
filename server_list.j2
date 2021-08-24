@@ -1,0 +1,6 @@
+{% for host in groups['all']  %}
+
+{{ hostvars[host]['ansible_fqdn']  }}
+
+{% endfor %}
+

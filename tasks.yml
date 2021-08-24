@@ -1,0 +1,20 @@
+---
+- hosts: proxy
+  become: yes
+  tasks:
+  - name: Create cron job
+    cron:
+      name: "append output for data command"
+      user: root
+      minute: "0"
+      hour: "*/1"
+      job: "date > /var/log/time.log"
+    notify: restart cron
+
+  handlers:
+  - name: restart cron
+    service:
+      name: crond
+      state: restarted
+      enabled: yes
+

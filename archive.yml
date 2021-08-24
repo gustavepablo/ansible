@@ -1,0 +1,19 @@
+---
+- hosts: database
+  become: yes
+  tasks:
+  - name: Create file and content
+    blockinfile:
+      create: yes      
+      marker: ''
+      path: /mnt/mysql_backups/database.txt
+      block: |
+         dev,test,qa,prod
+
+  - name: archice file
+    archive:
+      path: /mnt/mysql_backups/database.txt
+      dest: /mnt/mysql_backups/archive.gz
+      format: gz
+      force_archive: true
+

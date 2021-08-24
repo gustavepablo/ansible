@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Display message
+    debug: 
+      msg: "Message to display"
+    when: ansible_memtotal_mb > 13592 
+  - name: Setup vm.swappiness
+    sysctl:
+      name: vm.swappiness
+      value: '19'
+      state: present
+    when: ansible_memtotal_mb < 13592
+
+---

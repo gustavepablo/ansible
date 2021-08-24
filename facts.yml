@@ -1,0 +1,21 @@
+---
+# this playbook will create custome fact for database servers
+- hosts: database
+  become: yes
+  tasks:
+  - name: Create custome directory
+    file:
+      dest: /etc/ansible/facts.d/
+      state: directory
+      
+
+  - name: Create custome file
+    blockinfile:
+      create: yes
+      marker: ''
+      path: /etc/ansible/facts.d/custome.fact
+      block: |
+        [custome.sample_exam]
+           server_role=mysql
+
+

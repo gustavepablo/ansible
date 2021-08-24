@@ -1,0 +1,18 @@
+---
+# this playbook use jinja template file to generate entry in /etc/server_list.txt file
+# set selinux context for server_list.txt file
+- hosts: database
+  become: yes
+  tasks:
+  - name: Create invemtory list file
+    template:
+      src: server_list.j2
+      dest: /etc/server_list.txt
+      mode: 0600
+      setype: net_conf_t
+
+  - name: Set selinux label
+    sefcontext:
+      target: /etc/server_list.txt
+      setype: net_conf_t
+      state: present

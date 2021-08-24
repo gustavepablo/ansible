@@ -1,0 +1,11 @@
+---
+# this playbook use sample-mysql role in roles directory
+# this will create and mount new file system using lvm
+# create and enable mysql database
+# open firewall port 
+- hosts: database
+  become: yes
+  vars_files:
+    - /home/automation/plays/secret.yml
+  roles:
+    - sample-mysql

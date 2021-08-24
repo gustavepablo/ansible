@@ -1,0 +1,29 @@
+---
+# this playbook will change the content of /etc/issue file
+- hosts: all
+  become: yes
+  tasks:
+  - name: motd file in haproxy
+    lineinfile:
+      line: "Welcome to HAProxy"
+      path: /etc/motd
+    when: inventory_hostname in groups['proxy']
+
+
+  - name: motd file in apache
+    lineinfile:
+      line: "Welcome to apache"
+      path: /etc/motd
+    when: inventory_hostname in groups['webservers']
+
+
+  - name: motd file in database
+    lineinfile:
+      line: "Welcome to MariaDB"
+      path: /etc/motd
+    when: inventory_hostname in groups['database']
+
+
+
+
+
